@@ -1,0 +1,22 @@
+#-*-coding: utf-8 -*-
+import time
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+
+
+
+
+chrome_path = '/home/pirl/PycharmProjects/chromedriver'
+driver = webdriver.Chrome(chrome_path)
+
+list=['삼성','포스코','엘지','포스텍']
+
+for i in list:
+    driver.get("http://find.mk.co.kr/new/search.php?pageNum=1&cat=&cat1=&media_eco=&pageSize=10&sub=all&dispFlag=OFF&page=news&s_kwd=%60%C6%F7%BD%BA%C4%DA%60&s_page=news&go_page=&ord=1&ord1=1&ord2=0&s_keyword=%C6%F7%BD%BA%C4%DA&s_i_keyword=%60%C6%F7%BD%BA%C4%DA%60&s_author=&y1=2017&m1=01&d1=01&y2=2017&m2=10&d2=02&ord=1&area=tt") # 브라우저 불러오기
+    press_search=driver.find_element_by_css_selector('#search')
+    press_search.send_keys(Keys.RETURN)
+    search = driver.find_element_by_xpath('/html/body/center/div[1]/form/div/h2/a') #검색창 찾기
+    company=i.decode('utf-8')#한글로 검색하기위해 utf-8로 디코딩
+    search.send_keys(company)#검색어 입력
+    search.send_keys(Keys.RETURN)#엔터누르기
