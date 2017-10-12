@@ -10,7 +10,6 @@ from bs4 import BeautifulSoup
 
 import re
 
-from selenium import webdriver
 
 
 #제목 크롤링 함수
@@ -19,9 +18,16 @@ def get_title(URL):
     soup = BeautifulSoup(source_code_from_URL, 'lxml', from_encoding='utf-8')
     title = ''
     for item in soup.find_all('h1', class_='headline mg'):
+        title = title + str(item.text)
+        if title[1:3] == '[':
+            title = title[title.index(']')+1:]
+        else:
+            pass
+        title = re.sub(r'[…]', '' , title)
+
         #print (item)
         #title = title + str(item.find_all(title=True))
-        title = title + str(item.text)
+
     return title
 
 #날짜 크롤링 함수
@@ -46,13 +52,15 @@ def get_summary(URL):
     soup = BeautifulSoup(source_code_from_URL, 'lxml', from_encoding='utf-8')
     summary = ''
     for item in soup.find_all('meta', attrs={"name":"description"}):
-        #print (item)
         #text = text + str(item.find_all(text=True))
-        s = re.sub(r'[^가-힣0-9]', " ", str(item))
+
+        #s = re.sub(r'[^가-힣0-9]', " ", str(item))
+
         #s = re.sub(r'[!@#$&*():;="./|<>a-zA-Z]', repl, text)
         #summary = summary.replace('\n', ' ')
         #s = "\n".join(s.splitlines())
-        summary = s.replace("\n", ' ')
+        summary = item
+        #summary = s.replace("\n", ' ')
 
         #delete !@#$&*():;="./|<>a-zA-Z
         #print(summary)
@@ -68,8 +76,8 @@ def get_bodytext(URL):
         #print (item)
         #text = text + str(item.find_all(text=True))
         text = text + str(item.text)
-        newText = re.sub(r'[^가-힣0-9]+', " ", text)
-    return newText
+        #newText = re.sub(r'[^가-힣0-9]+', " ", text)
+    return text
 
 # 메인함수
 def main(URL, OUTPUT_FILE_NAME):
@@ -102,9 +110,9 @@ def main(URL, OUTPUT_FILE_NAME):
 #    main(URL, OUTPUT_FILE_NAME)
 
 
-for page in range(1,10):
+for page in range(21900000,22003001):
     #출력파일명
-    OUTPUT_FILE_NAME='/home/pirl/BS/JoongAng_new'+str(page)+'.txt'
+    OUTPUT_FILE_NAME='/home/pirl/JoongAng/JoongAng_'+str(page)+'.txt'
     #크롤링할 URL
     URL='http://news.joins.com/article/'+str(page)
     if get_title(URL) != "":
